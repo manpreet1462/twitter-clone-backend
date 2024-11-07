@@ -1,12 +1,13 @@
 import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
-import User from "../models/user.model.js";
+import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
 	try {
 		const { fullName, username, email, password } = req.body;
 
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 		if (!emailRegex.test(email)) {
 			return res.status(400).json({ error: "Invalid email format" });
 		}
@@ -99,6 +100,7 @@ export const logout = async (req, res) => {
 export const getMe = async (req, res) => {
 	try {
 		const user = await User.findById(req.user._id).select("-password");
+        console.log(user);
 		res.status(200).json(user);
 	} catch (error) {
 		console.log("Error in getMe controller", error.message);
